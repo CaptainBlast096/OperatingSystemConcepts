@@ -1,0 +1,48 @@
+Script started on Thu 05 Sep 2024 10:44:37 PM MDT
+osc@ubuntu:~/LinuxVirtualBox$ make clean
+rm -f program LuckyNumber.o
+osc@ubuntu:~/LinuxVirtualBox$ make
+gcc -c LuckyNumber.c
+gcc -o program main.c LuckyNumber.o
+osc@ubuntu:~/LinuxVirtualBox$ sudo make install
+[sudo] password for osc: 
+sudo cp program /usr/local/bin/
+osc@ubuntu:~/LinuxVirtualBox$ program
+Enter a guess between 1 and 5: 3
+
+You won!
+
+Wins: 1
+Less than: 0
+Greater than: 0
+
+Do you want to play again? y/n: n
+Game Over
+osc@ubuntu:~/LinuxVirtualBox$ sudo make uninstall
+sudo rm -f /usr/local/bin/program
+osc@ubuntu:~/LinuxVirtualBox$ program
+bash: /usr/local/bin/program: No such file or directory
+osc@ubuntu:~/LinuxVirtualBox$ ./program
+Enter a guess between 1 and 5: 1
+
+You won!
+
+Wins: 1
+Less than: 0
+Greater than: 0
+
+Do you want to play again? y/n: y
+Enter a guess between 1 and 5: 3
+
+Too high
+
+Wins: 1
+Less than: 0
+Greater than: 1
+
+Do you want to play again? y/n: n
+Game Over
+osc@ubuntu:~/LinuxVirtualBox$ exit
+exit
+
+Script done on Thu 05 Sep 2024 10:45:26 PM MDT
