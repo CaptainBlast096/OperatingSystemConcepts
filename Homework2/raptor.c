@@ -11,8 +11,8 @@ MODULE_AUTHOR("Jaleel Rogers");
 MODULE_DESCRIPTION("Maze Generator using Prim's Algorithm");
 MODULE_LICENSE("GPL");
 
-#define MAX_ROWS 12
-#define MAX_COLS 15
+#define MAX_ROWS 28 // Mutable Rows
+#define MAX_COLS 80 // Mutable Columns
 #define MAX_FRONTIER 1000  // Maximum number of frontier cells we can store
 #define PROC_NAME "raptor_maze"
 #define BUF_LEN 2048 // Buffer length for the maze
@@ -25,40 +25,15 @@ static char *maze_buffer;
 static struct proc_dir_entry* proc_entry;
 
 /*Name: Jaleel Rogers
-Date: 09/22/2024
-Description: Implementation of the read system call
-*/
-static ssize_t custom_read(struct file* file, char __user* user_buffer, size_t count, loff_t* offset)
-{
-    printk(KERN_INFO "calling our very own custom read method."); 
-    
-    char greeting[] = "Hello world!\n";
-    int greeting_length = strlen(greeting); 
- 
-    if (*offset > 0)
-    return 0; 
-
-    copy_to_user(user_buffer, greeting, greeting_length);
-    *offset = greeting_length; 
-    
-    return greeting_length;
-}
-
-static struct file_operations fops =
-{
-    .owner = THIS_MODULE,
-    .read = custom_read
-};
-
-/*Name: Jaleel Rogers
 Date: 09/20/2024
 Description: Prints the maze to the buzzer. 
     Copies each character and sends it to the buffer.
 */
 static void print_grid(char grid[][MAX_COLS], int rows, int cols) {
     int pos = 0;
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
+    int i,j;
+    for (i = 0; i < rows; i++) {
+	for (j = 0; j < cols; j++) {
             if (pos < BUF_LEN - 1) {
                 maze_buffer[pos++] = grid[i][j];
             }
@@ -75,8 +50,9 @@ Date: 09/20/2024
 Description: Creates a grid filled with #
 */
 static void make_grid(char grid[][MAX_COLS], int rows, int cols) {
-    for (int i = 0; i < rows; i++) {
-        for (int j = 0; j < cols; j++) {
+    int i,j;
+    for (i = 0; i < rows; i++) {
+        for (j = 0; j < cols; j++) {
             grid[i][j] = '#';
         }
     }
@@ -109,8 +85,9 @@ Description: Finds a cell 2 positions either in left, right, up, and down positi
 */
 static void add_frontier_cells(char grid[][MAX_COLS], Cell frontier[], int *frontier_count, int x, int y, int rows, int cols) {
     int directions[4][2] = { {-2, 0}, {2, 0}, {0, -2}, {0, 2} };
+    int i;
 
-    for (int i = 0; i < 4; i++) {
+    for (i = 0; i < 4; i++) {
         int nx = x + directions[i][0];
         int ny = y + directions[i][1];
 
@@ -128,8 +105,9 @@ Description: Connects the frontier cell to the neighbor cell with both set to pa
 */
 static void connect_to_passage(char grid[][MAX_COLS], int x, int y, int rows, int cols) {
     int directions[4][2] = { {-2, 0}, {2, 0}, {0, -2}, {0, 2} };
+    int i;
 
-    for (int i = 0; i < 4; i++) {
+    for (i = 0; i < 4; i++) {
         int nx = x + directions[i][0];
         int ny = y + directions[i][1];
 
@@ -186,8 +164,9 @@ ssize_t maze_read(struct file *file, char __user *buf, size_t count, loff_t *pos
     return simple_read_from_buffer(buf, count, pos, maze_buffer, strlen(maze_buffer));
 }
 
-static const struct proc_ops proc_file_ops = {
-    .proc_read = maze_read,
+static struct file_operations fops = {
+	.owner = THIS_MODULE,
+	.read = maze_read
 };
 
 /*Name: Jaleel Rogers
@@ -200,7 +179,7 @@ static int __init maze_init(void) {
 
     proc_entry = proc_create(PROC_NAME, 0666, NULL, &fops);
     
-    if (!maze_proc) {
+    if (!proc_entry) {
         kfree(maze_buffer);
         return -ENOMEM;
     }

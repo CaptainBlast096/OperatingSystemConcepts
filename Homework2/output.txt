@@ -1,0 +1,40 @@
+Script started on Sun 22 Sep 2024 05:57:34 AM MDT
+osc@ubuntu:~/workspace/OperatingSystemConcepts/Homework2$ make
+make -C /lib/modules/4.4.0-210-generic/build M=/home/osc/workspace/OperatingSystemConcepts/Homework2 modules
+make[1]: Entering directory '/usr/src/linux-headers-4.4.0-210-generic'
+  Building modules, stage 2.
+  MODPOST 1 modules
+make[1]: Leaving directory '/usr/src/linux-headers-4.4.0-210-generic'
+osc@ubuntu:~/workspace/OperatingSystemConcepts/Homework2$ sudo insmod raptor.ko
+[sudo] password for osc: 
+osc@ubuntu:~/workspace/OperatingSystemConcepts/Homework2$ python3 run.py
+ # # # # # # #   #     # # # #   #         # # # # #   # # # #   # # # #   # # #
+ # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
+   # # # # # # # # # #     #   # # # # # # # # # # # # # # # # # #   # # # # # #
+ # # # # # # ### # # # # # # # # # # # ### # # # # # # # # # ### # # # # ### # #
+ # #               # # # # # # #   # # # #     #     # # # # # # # # # #   # # #
+ # # # # # # # # # # # # # ### # # # # # # # # # # # # # # # # # # # # # # # # #
+     # # # # # # #     # #     # # # # # # # # # # #   # # #   # # # # # # # # #
+ # # # # # # ##### # # # # # # ### # # # ### # # # # # # # # # # # # # # # # # #
+ # # # # # # #     # #   # # # # # # # #         # # #   # # # # # # # # # # # #
+#### # # # # # # ##### # # # ### # # ### # # # ### ### # # ### # # # # # # # # #
+ # # # # # #   # #   # # # #       # #   # # # # # # # # #   #   # # # # # #   #
+ # # # # # # # # # # # # # # # # # # # # # # ### # # ### # # # # # # # # # # # #
+     # # # # # # # # # # # # # # #   # # # # #     # #   # #   # #         # # #
+ # # # # # ### # ### # # # # # # # # ##### # # # # # # # # # ### # # # # # # # #
+ # #   # # # # # # #         # # # # #         # #     #   # #     # # # # #   #
+#### # # # # # # # # # # # # ### ### # # # # # # # # # # # # # # # # # # ### # #
+   # # # #     #     # # # # #         # # # #   # # # # # # # # # # # #     # #
+ # ### # # # # # # # # # # # # # # # # # # # # # ##### # # # # ### # # # # # # #
+ #   # #   # #   # # # # # # # # # # # # # # # #       # # # # #   # # # # # # #
+## # # # # ### # # # # # ### ##### # # # # # # # # # # # # # # # # # # # # ### #
+   #     # #   # # # # # # # #   # # #     # # # # # # # # # # # # # # # #     #
+ # # # # ### # # # # # # # # # # # # # # ### ##### # # ##### # # # # # # # # # #
+ # # # #   # # # # # #         # # # # # #   #     # # #     # # # # # # # # # #
+ # ##### # # ### # ### # # # # # # # # ### ### # # # # # # # # # # # # # # # ###
+ # #     # # #   #     # # # # # # # # #   #   # # # # # # # # # # # # #   #   #
+ # # # ### # # # # # #
+osc@ubuntu:~/workspace/OperatingSystemConcepts/Homework2$ exit
+exit
+
+Script done on Sun 22 Sep 2024 05:58:30 AM MDT

@@ -2,6 +2,6 @@
 # Date: 09/22/2024
 
 kernel_module = open('/proc/raptor_maze')
-show = kernel_module.readline();
+show = kernel_module.read();
 print(show)
 kernel_module.close()
