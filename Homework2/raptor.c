@@ -3,8 +3,8 @@
 #include <linux/uaccess.h>
 #include <linux/fs.h>
 #include <linux/proc_fs.h>
-#include <linux/random.h>
-// #include <linux/slab.h>
+    #include <linux/random.h>
+    #include <linux/slab.h>
 
 // Module metadata
 MODULE_AUTHOR("Jaleel Rogers");
