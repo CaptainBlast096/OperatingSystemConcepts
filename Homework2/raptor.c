@@ -17,13 +17,30 @@ MODULE_LICENSE("GPL");
 #define PROC_NAME "raptor_maze"
 #define BUF_LEN 2048 // Buffer length for the maze
 
+/*Name: Jaleel Rogers
+Date: 09/22/2024
+Description: <Your description of the function>
+*/
 typedef struct {
     int x, y;
 } Cell;
 
+/*Name: <Your Name>
+Date: <The date you wrote the function>
+Description: <Your description of the function>
+*/
 static char *maze_buffer;
+
+/*Name: <Your Name>
+Date: <The date you wrote the function>
+Description: <Your description of the function>
+*/
 static struct proc_dir_entry* proc_entry;
 
+/*Name: <Your Name>
+Date: <The date you wrote the function>
+Description: <Your description of the function>
+*/
 static ssize_t custom_read(struct file* file, char __user* user_buffer, size_t count, loff_t* offset)
 {
     printk(KERN_INFO "calling our very own custom read method."); 
@@ -40,12 +57,20 @@ static ssize_t custom_read(struct file* file, char __user* user_buffer, size_t c
     return greeting_length;
 }
 
+/*Name: <Your Name>
+Date: <The date you wrote the function>
+Description: <Your description of the function>
+*/
 static struct file_operations fops =
 {
     .owner = THIS_MODULE,
     .read = custom_read
 };
 
+/*Name: <Your Name>
+Date: <The date you wrote the function>
+Description: <Your description of the function>
+*/
 static void print_grid(char grid[][MAX_COLS], int rows, int cols) {
     int pos = 0;
     for (int i = 0; i < rows; i++) {
@@ -61,6 +86,10 @@ static void print_grid(char grid[][MAX_COLS], int rows, int cols) {
     maze_buffer[pos] = '\0';
 }
 
+/*Name: <Your Name>
+Date: <The date you wrote the function>
+Description: <Your description of the function>
+*/
 static void make_grid(char grid[][MAX_COLS], int rows, int cols) {
     for (int i = 0; i < rows; i++) {
         for (int j = 0; j < cols; j++) {
@@ -69,10 +98,18 @@ static void make_grid(char grid[][MAX_COLS], int rows, int cols) {
     }
 }
 
+/*Name: <Your Name>
+Date: <The date you wrote the function>
+Description: <Your description of the function>
+*/
 static int is_within_bounds(int x, int y, int rows, int cols) {
     return (x >= 0 && x < rows && y >= 0 && y < cols);
 }
 
+/*Name: <Your Name>
+Date: <The date you wrote the function>
+Description: <Your description of the function>
+*/
 static void random_cell(char grid[][MAX_COLS], int rows, int cols, int *x, int *y) {
     int random_value;
     get_random_bytes(&random_value, sizeof(random_value));
@@ -82,6 +119,10 @@ static void random_cell(char grid[][MAX_COLS], int rows, int cols, int *x, int *
     grid[*x][*y] = ' ';  // Set random cell as passage
 }
 
+/*Name: <Your Name>
+Date: <The date you wrote the function>
+Description: <Your description of the function>
+*/
 static void add_frontier_cells(char grid[][MAX_COLS], Cell frontier[], int *frontier_count, int x, int y, int rows, int cols) {
     int directions[4][2] = { {-2, 0}, {2, 0}, {0, -2}, {0, 2} };
 
@@ -97,6 +138,10 @@ static void add_frontier_cells(char grid[][MAX_COLS], Cell frontier[], int *fron
     }
 }
 
+/*Name: <Your Name>
+Date: <The date you wrote the function>
+Description: <Your description of the function>
+*/
 static void connect_to_passage(char grid[][MAX_COLS], int x, int y, int rows, int cols) {
     int directions[4][2] = { {-2, 0}, {2, 0}, {0, -2}, {0, 2} };
 
@@ -114,6 +159,10 @@ static void connect_to_passage(char grid[][MAX_COLS], int x, int y, int rows, in
     }
 }
 
+/*Name: <Your Name>
+Date: <The date you wrote the function>
+Description: <Your description of the function>
+*/
 static void generate_maze(void) {
     int rows = MAX_ROWS;
     int cols = MAX_COLS;
@@ -145,7 +194,10 @@ static void generate_maze(void) {
     print_grid(grid, rows, cols);
 }
 
-// Proc read function
+/*Name: <Your Name>
+Date: <The date you wrote the function>
+Description: Proc read function
+*/
 ssize_t maze_read(struct file *file, char __user *buf, size_t count, loff_t *pos) {
     return simple_read_from_buffer(buf, count, pos, maze_buffer, strlen(maze_buffer));
 }
@@ -154,7 +206,10 @@ static const struct proc_ops proc_file_ops = {
     .proc_read = maze_read,
 };
 
-// Init function
+/*Name: <Your Name>
+Date: <The date you wrote the function>
+Description: <Your description of the function>
+*/
 static int __init maze_init(void) {
     maze_buffer = kmalloc(BUF_LEN, GFP_KERNEL);
     if (!maze_buffer) return -ENOMEM;
@@ -171,7 +226,10 @@ static int __init maze_init(void) {
     return 0;
 }
 
-// Exit function
+/*Name: <Your Name>
+Date: <The date you wrote the function>
+Description: <Your description of the function>
+*/
 static void __exit maze_exit(void) {
     proc_remove(proc_entry);
     kfree(maze_buffer);
