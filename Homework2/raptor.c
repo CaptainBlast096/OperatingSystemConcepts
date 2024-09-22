@@ -6,10 +6,10 @@
 #include <linux/random.h>
 // #include <linux/slab.h>
 
-//
-MODULE_LICENSE("GPL");
+// Module metadata
 MODULE_AUTHOR("Jaleel Rogers");
 MODULE_DESCRIPTION("Maze Generator using Prim's Algorithm");
+MODULE_LICENSE("GPL");
 
 #define MAX_ROWS 12
 #define MAX_COLS 15
@@ -22,7 +22,7 @@ typedef struct {
 } Cell;
 
 static char *maze_buffer;
-static struct proc_dir_entry *proc_entry;
+static struct proc_dir_entry* proc_entry;
 
 static ssize_t custom_read(struct file* file, char __user* user_buffer, size_t count, loff_t* offset)
 {
@@ -160,6 +160,7 @@ static int __init maze_init(void) {
     if (!maze_buffer) return -ENOMEM;
 
     proc_entry = proc_create(PROC_NAME, 0666, NULL, &fops);
+    
     if (!maze_proc) {
         kfree(maze_buffer);
         return -ENOMEM;
@@ -179,6 +180,3 @@ static void __exit maze_exit(void) {
 
 module_init(maze_init);
 module_exit(maze_exit);
-
-
-
