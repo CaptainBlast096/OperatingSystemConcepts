@@ -6,10 +6,15 @@
 #include <linux/random.h>
 // #include <linux/slab.h>
 
+//
+MODULE_LICENSE("GPL");
+MODULE_AUTHOR("Jaleel Rogers");
+MODULE_DESCRIPTION("Maze Generator using Prim's Algorithm");
+
 #define MAX_ROWS 12
 #define MAX_COLS 15
 #define MAX_FRONTIER 1000  // Maximum number of frontier cells we can store
-#define PROC_NAME "maze"
+#define PROC_NAME "raptor_maze"
 #define BUF_LEN 2048 // Buffer length for the maze
 
 typedef struct {
@@ -17,7 +22,29 @@ typedef struct {
 } Cell;
 
 static char *maze_buffer;
-static struct proc_dir_entry *maze_proc;
+static struct proc_dir_entry *proc_entry;
+
+static ssize_t custom_read(struct file* file, char __user* user_buffer, size_t count, loff_t* offset)
+{
+    printk(KERN_INFO "calling our very own custom read method."); 
+    
+    char greeting[] = "Hello world!\n";
+    int greeting_length = strlen(greeting); 
+ 
+    if (*offset > 0)
+    return 0; 
+
+    copy_to_user(user_buffer, greeting, greeting_length);
+    *offset = greeting_length; 
+    
+    return greeting_length;
+}
+
+static struct file_operations fops =
+{
+    .owner = THIS_MODULE,
+    .read = custom_read
+};
 
 static void print_grid(char grid[][MAX_COLS], int rows, int cols) {
     int pos = 0;
@@ -132,7 +159,7 @@ static int __init maze_init(void) {
     maze_buffer = kmalloc(BUF_LEN, GFP_KERNEL);
     if (!maze_buffer) return -ENOMEM;
 
-    maze_proc = proc_create(PROC_NAME, 0444, NULL, &proc_file_ops);
+    proc_entry = proc_create(PROC_NAME, 0666, NULL, &fops);
     if (!maze_proc) {
         kfree(maze_buffer);
         return -ENOMEM;
@@ -145,7 +172,7 @@ static int __init maze_init(void) {
 
 // Exit function
 static void __exit maze_exit(void) {
-    remove_proc_entry(PROC_NAME, NULL);
+    proc_remove(proc_entry);
     kfree(maze_buffer);
     printk(KERN_INFO "Maze module unloaded.\n");
 }
@@ -153,7 +180,5 @@ static void __exit maze_exit(void) {
 module_init(maze_init);
 module_exit(maze_exit);
 
-MODULE_LICENSE("GPL");
-MODULE_AUTHOR("Jaleel Rogers");
-MODULE_DESCRIPTION("Maze Generator using Prim's Algorithm");
+
 
