@@ -17,29 +17,16 @@ MODULE_LICENSE("GPL");
 #define PROC_NAME "raptor_maze"
 #define BUF_LEN 2048 // Buffer length for the maze
 
-/*Name: Jaleel Rogers
-Date: 09/22/2024
-Description: <Your description of the function>
-*/
 typedef struct {
     int x, y;
 } Cell;
 
-/*Name: <Your Name>
-Date: <The date you wrote the function>
-Description: <Your description of the function>
-*/
 static char *maze_buffer;
-
-/*Name: <Your Name>
-Date: <The date you wrote the function>
-Description: <Your description of the function>
-*/
 static struct proc_dir_entry* proc_entry;
 
-/*Name: <Your Name>
-Date: <The date you wrote the function>
-Description: <Your description of the function>
+/*Name: Jaleel Rogers
+Date: 09/22/2024
+Description: Implementation of the read system call
 */
 static ssize_t custom_read(struct file* file, char __user* user_buffer, size_t count, loff_t* offset)
 {
@@ -57,19 +44,16 @@ static ssize_t custom_read(struct file* file, char __user* user_buffer, size_t c
     return greeting_length;
 }
 
-/*Name: <Your Name>
-Date: <The date you wrote the function>
-Description: <Your description of the function>
-*/
 static struct file_operations fops =
 {
     .owner = THIS_MODULE,
     .read = custom_read
 };
 
-/*Name: <Your Name>
-Date: <The date you wrote the function>
-Description: <Your description of the function>
+/*Name: Jaleel Rogers
+Date: 09/20/2024
+Description: Prints the maze to the buzzer. 
+    Copies each character and sends it to the buffer.
 */
 static void print_grid(char grid[][MAX_COLS], int rows, int cols) {
     int pos = 0;
@@ -86,9 +70,9 @@ static void print_grid(char grid[][MAX_COLS], int rows, int cols) {
     maze_buffer[pos] = '\0';
 }
 
-/*Name: <Your Name>
-Date: <The date you wrote the function>
-Description: <Your description of the function>
+/*Name: Jaleel Rogers
+Date: 09/20/2024
+Description: Creates a grid filled with #
 */
 static void make_grid(char grid[][MAX_COLS], int rows, int cols) {
     for (int i = 0; i < rows; i++) {
@@ -98,17 +82,17 @@ static void make_grid(char grid[][MAX_COLS], int rows, int cols) {
     }
 }
 
-/*Name: <Your Name>
-Date: <The date you wrote the function>
-Description: <Your description of the function>
+/*Name: Jaleel Rogers
+Date: 09/20/2024
+Description: Determines if a cell is within bounds
 */
 static int is_within_bounds(int x, int y, int rows, int cols) {
     return (x >= 0 && x < rows && y >= 0 && y < cols);
 }
 
-/*Name: <Your Name>
-Date: <The date you wrote the function>
-Description: <Your description of the function>
+/*Name: Jaleel Rogers
+Date: 09/20/2024
+Description: Creates a space within the maze representing the first cell set to passage
 */
 static void random_cell(char grid[][MAX_COLS], int rows, int cols, int *x, int *y) {
     int random_value;
@@ -119,9 +103,9 @@ static void random_cell(char grid[][MAX_COLS], int rows, int cols, int *x, int *
     grid[*x][*y] = ' ';  // Set random cell as passage
 }
 
-/*Name: <Your Name>
-Date: <The date you wrote the function>
-Description: <Your description of the function>
+/*Name: Jaleel Rogers
+Date: 09/20/2024
+Description: Finds a cell 2 positions either in left, right, up, and down positions
 */
 static void add_frontier_cells(char grid[][MAX_COLS], Cell frontier[], int *frontier_count, int x, int y, int rows, int cols) {
     int directions[4][2] = { {-2, 0}, {2, 0}, {0, -2}, {0, 2} };
@@ -138,9 +122,9 @@ static void add_frontier_cells(char grid[][MAX_COLS], Cell frontier[], int *fron
     }
 }
 
-/*Name: <Your Name>
-Date: <The date you wrote the function>
-Description: <Your description of the function>
+/*Name: Jaleel Rogers
+Date: 09/21/2024
+Description: Connects the frontier cell to the neighbor cell with both set to passage
 */
 static void connect_to_passage(char grid[][MAX_COLS], int x, int y, int rows, int cols) {
     int directions[4][2] = { {-2, 0}, {2, 0}, {0, -2}, {0, 2} };
@@ -159,9 +143,9 @@ static void connect_to_passage(char grid[][MAX_COLS], int x, int y, int rows, in
     }
 }
 
-/*Name: <Your Name>
-Date: <The date you wrote the function>
-Description: <Your description of the function>
+/*Name: Jaleel Rogers
+Date: 09/21/2024
+Description: Generates the maze using the functions for Prim's algorithm
 */
 static void generate_maze(void) {
     int rows = MAX_ROWS;
@@ -194,8 +178,8 @@ static void generate_maze(void) {
     print_grid(grid, rows, cols);
 }
 
-/*Name: <Your Name>
-Date: <The date you wrote the function>
+/*Name: Jaleel Rogers
+Date: 09/21/2024
 Description: Proc read function
 */
 ssize_t maze_read(struct file *file, char __user *buf, size_t count, loff_t *pos) {
@@ -206,9 +190,9 @@ static const struct proc_ops proc_file_ops = {
     .proc_read = maze_read,
 };
 
-/*Name: <Your Name>
-Date: <The date you wrote the function>
-Description: <Your description of the function>
+/*Name: Jaleel Rogers
+Date: 09/21/2024
+Description: Calls to generate maze
 */
 static int __init maze_init(void) {
     maze_buffer = kmalloc(BUF_LEN, GFP_KERNEL);
@@ -226,9 +210,9 @@ static int __init maze_init(void) {
     return 0;
 }
 
-/*Name: <Your Name>
-Date: <The date you wrote the function>
-Description: <Your description of the function>
+/*Name: Jaleel Rogers
+Date: 09/20/2024
+Description: Frees to memory and unloads module
 */
 static void __exit maze_exit(void) {
     proc_remove(proc_entry);
