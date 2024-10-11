@@ -1,11 +1,18 @@
+/*
+ Author: Jaleel Rogers
+ Class:
+ Date: 
+ */
 // C libraries
 #include<stdio.h>
 #include <stdlib.h>
 #include<string.h>
 #include<stdlib.h>
 #include<unistd.h>
-
 #include<sys/types.h>
+//#include<sys/wait.h>
+//#include<readline/readline.h>
+//#include<readline/history.h>
 
 // Define commands
 
@@ -21,9 +28,37 @@ void motd() {
     printf("\n");
 }
 
-int userInput(char *str);
-void execArgs(char **parsed);
-int cmdHandler(char **parsed);
+int userInput(char *str) {
+    char* buffer;
+
+    buffer = readline("\n>>>");
+    if (strlen(buffer) != 0) {
+        add_history(buffer);
+        strcpy(str, buffer);
+        return 0;
+    }
+    else {
+        return 1;
+    }
+}
+void execArgs(char **parsed) {
+    pid_t pid = fork();
+
+    if (pid == -1) {
+        printf("\nFailed forking child...");
+        return;
+    }
+    else if (pid == 0) {
+        if (execvp(parsed[0], parsed) < 0) {
+            printf("\nCould not execute command...");
+        }
+        exit(0);
+    } else {
+        wait(NULL);
+        return;
+    }
+}
+
 int cd(char *path) {
     if (cd(path) != 0) {
         perror("chdir"); //Prints and error message
@@ -31,20 +66,40 @@ int cd(char *path) {
     }
     return 0;
 }
-int main(void) {
-    motd();
 
-    while (1) {
-        printf("dino-shell$ "); // Start of the prompt
-        char input[256]; // User input can be up to 256 characters long
-        fgets(input,sizeof(input), stdin); // Reads a line from specified stream and stores it into the string
-            // Memory of string, size of string, stream
+int cmdHandler(char **parsed) {
+    int numCmds = 2, i, switchFlag;
+    char* username, commandList[numCmds];
 
-        // Exit condition
-        if (strcmp(input, "exit\n") == 0) { // strcmp is used to compare strings, comparing the input and 'exit'
-            printf("Exiting Dino Shell.\n");
+    commandList[0] = "exit";
+    commandList[1] = "cd";
+
+    for (i = 0; i < numCmds; i++) {
+        if (strcmp(parsed[0], commandList[i]) == 0) {
+            switchFlag = i + 1;
             break;
         }
     }
+    switch (switchFlag) {
+        case 1:
+            printf("\nExiting Dino Shell.\n");
+            exit(0);
+        case 2:
+            cd(parsed[1]);
+            return 1;
+        default:
+            break;
+    }
+    return 0;
+}
+
+void execArgsPiped(char** parsed, char** parsedpipe);
+int parsePipe(char* str, char** strpiped);
+void parseSpace(char* str, char** parsed);
+int processString(char* str, char** parsed, char** parsedpipe);
+
+
+int main(void) {
+    motd();
     return 0;
 }
