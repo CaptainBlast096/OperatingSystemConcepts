@@ -129,7 +129,6 @@ int ownCmdHandler(char** parsed)
     int NoOfOwnCmds = 2, i, switchOwnArg = 0;
     char* ListOfOwnCmds[NoOfOwnCmds];
     char* username;
-    printf("\033[0;32m");
     ListOfOwnCmds[0] = "exit";
     ListOfOwnCmds[1] = "cd";
 
@@ -150,7 +149,6 @@ int ownCmdHandler(char** parsed)
     default:
         break;
     }
-    printf("\033[0m");
     return 0;
 }
 
