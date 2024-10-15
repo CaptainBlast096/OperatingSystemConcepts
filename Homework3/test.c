@@ -30,6 +30,7 @@ void init_shell()
 // Function to take input
 int takeInput(char* str)
 {
+    printf("\033[0m");
     char* buf;
     buf = readline("\n>>> ");
     
