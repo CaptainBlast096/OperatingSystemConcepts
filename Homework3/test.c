@@ -142,6 +142,7 @@ int ownCmdHandler(char** parsed)
     switch (switchOwnArg) {
     case 1:
         printf("\nGoodbye\n");
+        printf("\033[0m");
         exit(0);
     case 2:
         chdir(parsed[1]);
