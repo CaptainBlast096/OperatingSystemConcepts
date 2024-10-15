@@ -11,32 +11,29 @@
 #define MAXCOM 1000 // max number of letters to be supported
 #define MAXLIST 100 // max number of commands to be supported
 
-// Clearing the shell using escape sequences
-#define clear() printf("\033[H\033[J")
-
 // Greeting shell during startup
 void init_shell()
 {
-    clear();
+    printf("\033[0;32m");
     printf("\n\n\n\n******************"
         "************************");
-    printf("\n\n\n\t****MY SHELL****");
-    printf("\n\n\t-USE AT YOUR OWN RISK-");
+    printf("\n\n\n\t****Dino Shell****");
     printf("\n\n\n\n*******************"
         "***********************");
     char* username = getenv("USER");
-    printf("\n\n\nUSER is: @%s", username);
+    printf("\n\n\nUSER: @%s", username);
     printf("\n");
     sleep(1);
-    clear();
+    printf("\033[0m");
 }
 
 // Function to take input
 int takeInput(char* str)
 {
+    printf("\033[0m");
     char* buf;
-
     buf = readline("\n>>> ");
+
     if (strlen(buf) != 0) {
         add_history(buf);
         strcpy(str, buf);
@@ -46,20 +43,12 @@ int takeInput(char* str)
     }
 }
 
-// Function to print Current Directory.
-void printDir()
-{
-    char cwd[1024];
-    getcwd(cwd, sizeof(cwd));
-    printf("\nDir: %s", cwd);
-}
-
 // Function where the system command is executed
 void execArgs(char** parsed)
 {
     // Forking a child
-    pid_t pid = fork(); 
-
+    pid_t pid = fork();
+    printf("\033[0;32m");
     if (pid == -1) {
         printf("\nFailed forking child..");
         return;
@@ -70,18 +59,21 @@ void execArgs(char** parsed)
         exit(0);
     } else {
         // waiting for child to terminate
-        wait(NULL); 
+        printf("--------------------Starting program --------------------------\n");
+        wait(NULL);
+        printf("__________________Program ended --------------\n");
         return;
     }
+     printf("\033[0m");
 }
 
 // Function where the piped system commands is executed
 void execArgsPiped(char** parsed, char** parsedpipe)
 {
     // 0 is read end, 1 is write end
-    int pipefd[2]; 
+    int pipefd[2];
     pid_t p1, p2;
-
+    printf("\033[0;32m");
     if (pipe(pipefd) < 0) {
         printf("\nPipe could not be initialized");
         return;
@@ -128,36 +120,17 @@ void execArgsPiped(char** parsed, char** parsedpipe)
             wait(NULL);
         }
     }
-}
-
-// Help command builtin
-void openHelp()
-{
-    puts("\n***WELCOME TO MY SHELL HELP***"
-        "\nCopyright @ Suprotik Dey"
-        "\n-Use the shell at your own risk..."
-        "\nList of Commands supported:"
-        "\n>cd"
-        "\n>ls"
-        "\n>exit"
-        "\n>all other general commands available in UNIX shell"
-        "\n>pipe handling"
-        "\n>improper space handling");
-
-    return;
+    printf("\033[0m");
 }
 
 // Function to execute builtin commands
 int ownCmdHandler(char** parsed)
 {
-    int NoOfOwnCmds = 4, i, switchOwnArg = 0;
+    int NoOfOwnCmds = 2, i, switchOwnArg = 0;
     char* ListOfOwnCmds[NoOfOwnCmds];
     char* username;
-
     ListOfOwnCmds[0] = "exit";
     ListOfOwnCmds[1] = "cd";
-    ListOfOwnCmds[2] = "help";
-    ListOfOwnCmds[3] = "hello";
 
     for (i = 0; i < NoOfOwnCmds; i++) {
         if (strcmp(parsed[0], ListOfOwnCmds[i]) == 0) {
@@ -173,20 +146,9 @@ int ownCmdHandler(char** parsed)
     case 2:
         chdir(parsed[1]);
         return 1;
-    case 3:
-        openHelp();
-        return 1;
-    case 4:
-        username = getenv("USER");
-        printf("\nHello %s.\nMind that this is "
-            "not a place to play around."
-            "\nUse help to know more..\n",
-            username);
-        return 1;
     default:
         break;
     }
-
     return 0;
 }
 
@@ -194,6 +156,7 @@ int ownCmdHandler(char** parsed)
 int parsePipe(char* str, char** strpiped)
 {
     int i;
+     printf("\033[0;32m");
     for (i = 0; i < 2; i++) {
         strpiped[i] = strsep(&str, "|");
         if (strpiped[i] == NULL)
@@ -205,6 +168,7 @@ int parsePipe(char* str, char** strpiped)
     else {
         return 1;
     }
+    printf("\033[0m");
 }
 
 // function for parsing command words
@@ -250,11 +214,11 @@ int main()
     char inputString[MAXCOM], *parsedArgs[MAXLIST];
     char* parsedArgsPiped[MAXLIST];
     int execFlag = 0;
+
     init_shell();
 
     while (1) {
         // print shell line
-        printDir();
         // take input
         if (takeInput(inputString))
             continue;
