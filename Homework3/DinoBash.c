@@ -228,8 +228,6 @@ int processString(char* str, char** parsed, char** parsedPipe) {
 int main(void) {
     //Curses libraries may not be needed
     initscr(); //Initializes the curses library
-    noecho(); //Disables echoing of typed characters to terminal
-    cbreak(); //Sets the terminal to raw mode, characters are read immeidately without line buffering
     start_color(); //Enables color support in the terminal
     init_pair(1, COLOR_WHITE, COLOR_BLACK); // User color
     init_pair(2, COLOR_GREEN, COLOR_BLACK); //Program color
@@ -239,6 +237,10 @@ int main(void) {
     int execFlag = 0;
 
     while (1) {
+
+        if (userInput(inputString)) {
+            continue;
+    }
         execFlag = processString(inputString, parsedArgs, &parsedArgsPiped);
             //Calls the processString function to parse the user's input and determines
 
