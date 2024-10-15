@@ -218,6 +218,7 @@ int processString(char* str, char** parsed, char** parsedPipe) {
 int main(void) {
     //Curses libraries may not be needed
     initscr(); //Initializes the curses library
+    raw();
     start_color(); //Enables color support in the terminal
     init_pair(1, COLOR_WHITE, COLOR_BLACK); // User color
     init_pair(2, COLOR_GREEN, COLOR_BLACK); //Program color
@@ -240,6 +241,7 @@ int main(void) {
         if (execFlag == 2) //If the input is a piped command
             execArgsPiped(parsedArgs, parsedArgsPiped);
     }
+    getch();
     endwin(); //Ends curses mode and restores the terminal to its orginal state
     return 0;
 }
