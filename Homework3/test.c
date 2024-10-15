@@ -218,7 +218,6 @@ int main()
 
     while (1) {
         // print shell line
-        printDir();
         // take input
         if (takeInput(inputString))
             continue;
