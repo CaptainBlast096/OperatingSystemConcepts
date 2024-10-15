@@ -31,9 +31,7 @@ void init_shell()
 int takeInput(char* str)
 {
     char* buf;
-    printf("\033[0;32m");
     buf = readline("\n>>> ");
-    printf("\033[0m");
     
     if (strlen(buf) != 0) {
         add_history(buf);
