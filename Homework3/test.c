@@ -14,6 +14,7 @@
 // Greeting shell during startup
 void init_shell()
 {
+    printf("\033[0;32m");
     system("export PS1=\"\\033[0;32m[\\u@\\h:\\w]\\033[0m\$ \"");
     printf("\n\n\n\n******************"
         "************************");
