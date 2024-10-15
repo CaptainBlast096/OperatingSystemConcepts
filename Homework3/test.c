@@ -116,6 +116,8 @@ void execArgsPiped(char** parsed, char** parsedpipe)
             }
         } else {
             // parent executing, waiting for two children
+            close(pipefd[0]);
+            close(pipefd[1]);
             wait(NULL);
             wait(NULL);
         }
@@ -157,7 +159,7 @@ int ownCmdHandler(char** parsed)
 int parsePipe(char* str, char** strpiped)
 {
     int i;
-     printf("\033[0;32m");
+    printf("\033[0;32m");
     for (i = 0; i < 2; i++) {
         strpiped[i] = strsep(&str, "|");
         if (strpiped[i] == NULL)
