@@ -31,8 +31,10 @@ void init_shell()
 int takeInput(char* str)
 {
     char* buf;
-
+    printf("\033[0;32m");
     buf = readline("\n>>> ");
+    printf("\033[0m");
+    
     if (strlen(buf) != 0) {
         add_history(buf);
         strcpy(str, buf);
@@ -47,7 +49,7 @@ void execArgs(char** parsed)
 {
     // Forking a child
     pid_t pid = fork();
-
+    printf("\033[0;32m");
     if (pid == -1) {
         printf("\nFailed forking child..");
         return;
@@ -63,6 +65,7 @@ void execArgs(char** parsed)
         printf("__________________Program ended --------------\n");
         return;
     }
+     printf("\033[0m");
 }
 
 // Function where the piped system commands is executed
@@ -71,7 +74,7 @@ void execArgsPiped(char** parsed, char** parsedpipe)
     // 0 is read end, 1 is write end
     int pipefd[2];
     pid_t p1, p2;
-
+    printf("\033[0;32m");
     if (pipe(pipefd) < 0) {
         printf("\nPipe could not be initialized");
         return;
@@ -118,6 +121,7 @@ void execArgsPiped(char** parsed, char** parsedpipe)
             wait(NULL);
         }
     }
+    printf("\033[0m");
 }
 
 // Function to execute builtin commands
@@ -126,7 +130,7 @@ int ownCmdHandler(char** parsed)
     int NoOfOwnCmds = 2, i, switchOwnArg = 0;
     char* ListOfOwnCmds[NoOfOwnCmds];
     char* username;
-
+    printf("\033[0;32m");
     ListOfOwnCmds[0] = "exit";
     ListOfOwnCmds[1] = "cd";
 
@@ -147,7 +151,7 @@ int ownCmdHandler(char** parsed)
     default:
         break;
     }
-
+    printf("\033[0m");
     return 0;
 }
 
@@ -155,6 +159,7 @@ int ownCmdHandler(char** parsed)
 int parsePipe(char* str, char** strpiped)
 {
     int i;
+     printf("\033[0;32m");
     for (i = 0; i < 2; i++) {
         strpiped[i] = strsep(&str, "|");
         if (strpiped[i] == NULL)
@@ -166,6 +171,7 @@ int parsePipe(char* str, char** strpiped)
     else {
         return 1;
     }
+    printf("\033[0m");
 }
 
 // function for parsing command words
