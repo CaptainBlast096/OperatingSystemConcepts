@@ -14,7 +14,6 @@
 // Greeting shell during startup
 void init_shell()
 {
-    printf("\033[0;32m");
     printf("\n\n\n\n******************"
         "************************");
     printf("\n\n\n\t****Dino Shell****");
@@ -24,12 +23,13 @@ void init_shell()
     printf("\n\n\nUSER: @%s", username);
     printf("\n");
     sleep(1);
-    printf("\033[0m");
+    
 }
 
 // Function to take input
 int takeInput(char* str)
 {
+    printf("\033[0;32m");
     printf("\033[0m");
     char* buf;
     buf = readline("\n>>> ");
@@ -41,6 +41,7 @@ int takeInput(char* str)
     } else {
         return 1;
     }
+    printf("\033[0m");
 }
 
 // Function where the system command is executed
@@ -48,7 +49,7 @@ void execArgs(char** parsed)
 {
     // Forking a child
     pid_t pid = fork();
-    printf("\033[0;32m");
+    
     if (pid == -1) {
         printf("\nFailed forking child..");
         return;
@@ -64,7 +65,6 @@ void execArgs(char** parsed)
         printf("__________________Program ended --------------\n");
         return;
     }
-     printf("\033[0m");
 }
 
 // Function where the piped system commands is executed
@@ -73,7 +73,6 @@ void execArgsPiped(char** parsed, char** parsedpipe)
     // 0 is read end, 1 is write end
     int pipefd[2];
     pid_t p1, p2;
-    printf("\033[0;32m");
     if (pipe(pipefd) < 0) {
         printf("\nPipe could not be initialized");
         return;
@@ -90,7 +89,6 @@ void execArgsPiped(char** parsed, char** parsedpipe)
         close(pipefd[0]);
         dup2(pipefd[1], STDOUT_FILENO);
         close(pipefd[1]);
-        printf("\033[0;32m");
         
         if (execvp(parsed[0], parsed) < 0) {
             printf("\nCould not execute command 1..");
@@ -111,7 +109,7 @@ void execArgsPiped(char** parsed, char** parsedpipe)
             close(pipefd[1]);
             dup2(pipefd[0], STDIN_FILENO);
             close(pipefd[0]);
-            printf("\033[0;32m");
+       
             if (execvp(parsedpipe[0], parsedpipe) < 0) {
                 printf("\nCould not execute command 2..");
                 exit(0);
@@ -124,7 +122,6 @@ void execArgsPiped(char** parsed, char** parsedpipe)
             wait(NULL);
         }
     }
-    printf("\033[0m");
 }
 
 // Function to execute builtin commands
@@ -146,7 +143,6 @@ int ownCmdHandler(char** parsed)
     switch (switchOwnArg) {
     case 1:
         printf("\nGoodbye\n");
-        printf("\033[0m");
         exit(0);
     case 2:
         chdir(parsed[1]);
@@ -161,7 +157,6 @@ int ownCmdHandler(char** parsed)
 int parsePipe(char* str, char** strpiped)
 {
     int i;
-    printf("\033[0;32m");
     for (i = 0; i < 2; i++) {
         strpiped[i] = strsep(&str, "|");
         if (strpiped[i] == NULL)
@@ -173,7 +168,6 @@ int parsePipe(char* str, char** strpiped)
     else {
         return 1;
     }
-    printf("\033[0m");
 }
 
 // function for parsing command words
