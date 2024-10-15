@@ -7,17 +7,15 @@
 #include<sys/wait.h>
 #include<readline/readline.h>
 #include<readline/history.h>
+#include<ncurses.h>
 
 #define MAXCOM 1000 // max number of letters to be supported
 #define MAXLIST 100 // max number of commands to be supported
 
-// Clearing the shell using escape sequences
-#define clear() printf("\033[H\033[J")
-
 // Greeting shell during startup
 void init_shell()
 {
-    clear();
+    attron(COLOR_PAIR(2));
     printf("\n\n\n\n******************"
         "************************");
     printf("\n\n\n\t****Dino Shell****");
@@ -27,7 +25,7 @@ void init_shell()
     printf("\n\n\nUSER: @%s", username);
     printf("\n");
     sleep(1);
-    clear();
+    attroff(COLOR_PAIR(2));
 }
 
 // Function to take input
@@ -214,8 +212,13 @@ int main()
     char inputString[MAXCOM], *parsedArgs[MAXLIST];
     char* parsedArgsPiped[MAXLIST];
     int execFlag = 0;
+    initscr();
+    start_color(); //Enables color support in the terminal
+    init_pair(1, COLOR_WHITE, COLOR_BLACK); // User color
+    init_pair(2, COLOR_GREEN, COLOR_BLACK); //Program color
+    
     init_shell();
-
+    
     while (1) {
         // print shell line
         // take input
