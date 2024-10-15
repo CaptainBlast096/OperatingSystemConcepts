@@ -29,11 +29,11 @@ void init_shell()
 // Function to take input
 int takeInput(char* str)
 {
-    printf("\033[0;32m");
-    printf("\033[0m");
     char* buf;
+    printf("\033[0;32m");
     buf = readline("\n>>> ");
-
+    printf("\033[0m");
+    
     if (strlen(buf) != 0) {
         add_history(buf);
         strcpy(str, buf);
@@ -41,7 +41,6 @@ int takeInput(char* str)
     } else {
         return 1;
     }
-    printf("\033[0m");
 }
 
 // Function where the system command is executed
