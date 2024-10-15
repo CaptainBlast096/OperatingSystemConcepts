@@ -22,19 +22,21 @@
 //Startup greeting
 void motd() {
     attron(COLOR_PAIR(2)); //Sets the current foreground color
-    printf("\n");
-    printf("  Wecome to Dino Shell!\n");
-    printf("-------------------------------\n");
-    printf("Enter your commands below.\n");
-    printf("Type 'exit' to quit.\n");
+    printf("\n\n\n\n******************"
+        "************************");
+    printf("\n\n\n\t****Dino Shell****");
+    printf("\n\n\n\n*******************"
+        "***********************");
     char* username = getenv("USER");
-    printf("USER is: @%s", username);
+    printf("\n\n\nUSER is: @%s", username);
     printf("\n");
+    sleep(1);
+    clear();
     attroff(COLOR_PAIR(2)); // Resets the color attributes to default values
 }
 
 //Reads a line of input from the user and stores it in a buffer along with history
-int userInput(char *str) {
+int userInput(char* str) {
     char* buffer;
     attron(COLOR_PAIR(1));
     buffer = readline("\n>>>"); //readline reads a line of input
@@ -52,7 +54,7 @@ int userInput(char *str) {
 }
 
 //System command is executed
-void execArgs(char **parsed) {
+void execArgs(char** parsed) {
     pid_t pid = fork(); //Forks a child
     attron(COLOR_PAIR(2));
 
@@ -74,18 +76,6 @@ void execArgs(char **parsed) {
     attroff(COLOR_PAIR(2));
 }
 
-//Don't think this is necessary, chdir() is a built-in function within unistd.h
-int cd(char *path) {
-    attron(COLOR_PAIR(2));
-
-    if (cd(path) != 0) {
-        perror("chdir"); //Prints and error message
-        return 1;
-    }
-    return 0;
-    attroff(COLOR_PAIR(1));
-}
-
 //Executes builtin commands
 int cmdHandler(char** parsed) {
     int numCmds = 2, i, switchFlag = 0;
@@ -103,7 +93,7 @@ int cmdHandler(char** parsed) {
 
     switch (switchFlag) {
         case 1:
-            printf("\nExiting Dino Shell.\n");
+            printf("\nExiting Dino Shell\n");
             exit(0);
         case 2:
             chdir(parsed[1]);
@@ -238,9 +228,9 @@ int main(void) {
 
     while (1) {
 
-        if (userInput(inputString)) {
+        if (userInput(inputString)) 
             continue;
-    }
+    
         execFlag = processString(inputString, parsedArgs, &parsedArgsPiped);
             //Calls the processString function to parse the user's input and determines
 
