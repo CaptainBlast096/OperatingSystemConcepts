@@ -90,7 +90,8 @@ void execArgsPiped(char** parsed, char** parsedpipe)
         close(pipefd[0]);
         dup2(pipefd[1], STDOUT_FILENO);
         close(pipefd[1]);
-
+        printf("\033[0;32m");
+        
         if (execvp(parsed[0], parsed) < 0) {
             printf("\nCould not execute command 1..");
             exit(0);
@@ -110,6 +111,7 @@ void execArgsPiped(char** parsed, char** parsedpipe)
             close(pipefd[1]);
             dup2(pipefd[0], STDIN_FILENO);
             close(pipefd[0]);
+            printf("\033[0;32m");
             if (execvp(parsedpipe[0], parsedpipe) < 0) {
                 printf("\nCould not execute command 2..");
                 exit(0);
