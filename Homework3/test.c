@@ -24,7 +24,7 @@ void init_shell()
     printf("\n\n\nUSER: @%s", username);
     printf("\n");
     sleep(1);
-
+    printf("\033[0m");
 }
 
 // Function to take input
