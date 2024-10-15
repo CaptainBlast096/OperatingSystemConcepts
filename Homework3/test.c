@@ -213,6 +213,7 @@ int main()
     char* parsedArgsPiped[MAXLIST];
     int execFlag = 0;
     initscr();
+    raw();
     start_color(); //Enables color support in the terminal
     init_pair(1, COLOR_WHITE, COLOR_BLACK); // User color
     init_pair(2, COLOR_GREEN, COLOR_BLACK); //Program color
@@ -239,5 +240,7 @@ int main()
         if (execFlag == 2)
             execArgsPiped(parsedArgs, parsedArgsPiped);
     }
+    getch();
+    endwin();
     return 0;
 }
