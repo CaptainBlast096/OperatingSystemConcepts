@@ -22,8 +22,8 @@
 // Greeting shell during startup
 void motd()
 {
-    printf("\n\n\n\t*******Dino Shell*******");
-       printf("                   \n__\n");
+    printf("\n\n\n\t*******Dino Shell*******\n");
+       printf("               __\n");
        printf("              / _)\n");
        printf("     _.----._/ /\n");
        printf("    /         /\n");
