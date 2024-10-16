@@ -22,12 +22,12 @@
 // Greeting shell during startup
 void motd()
 {
-    printf("\n\n\n\t****Dino Shell****");
-    printf("                        __\n");
-    printf("                       / _)\n");
-    printf("         _.----._/ /\n");
-    printf("        /         /\n");
-    printf("  __/   (  | (  |\n");
+    printf("\n\n\n\t*******Dino Shell*******");
+    printf("               __\n");
+    printf("              / _)\n");
+    printf("     _.----._/ /\n");
+    printf("    /         /\n");
+    printf(" __/ (  | (  |\n");
     printf("/__.-'|_|--|_|\n");
     char* username = getenv("USER");
     printf("\n\n\nUSER: @%s", username);
