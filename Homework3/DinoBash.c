@@ -13,7 +13,6 @@
 #include<sys/wait.h> //Functionality of wait
 #include<readline/readline.h> //Functionality of readline
 #include<readline/history.h> //Functionality of history releated functions
-#include<curses.h> //Provides a variety of colors
 
 // Define commands
 #define MAXCOM 1000 // Max number of letters supported
