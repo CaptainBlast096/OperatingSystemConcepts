@@ -1,0 +1,57 @@
+Script started on Mon 11 Nov 2024 08:46:18 PM MST
+root@ubuntu:/home/osc/JurassicScheduler# ls
+[0m[01;32mjurassicScheduler.cpp[0m  Makefile  output.txt  [01;32mprocesses.txt[0m
+root@ubuntu:/home/osc/JurassicScheduler# make clean
+Cleaning up...
+rm -f jurassicScheduler
+root@ubuntu:/home/osc/JurassicScheduler# make uninstall
+Uninstalling jurassicScheduler...
+sudo rm -f jurassicScheduler
+root@ubuntu:/home/osc/JurassicScheduler# make
+Compiling jurassicScheduler...
+sudo g++ -std=c++11 jurassicScheduler.cpp -o jurassicScheduler
+root@ubuntu:/home/osc/JurassicScheduler# ls
+[0m[01;32mjurassicScheduler[0m  [01;32mjurassicScheduler.cpp[0m  Makefile  output.txt  [01;32mprocesses.txt[0m
+root@ubuntu:/home/osc/JurassicScheduler# ./jurassicScheduler
+Processes Loaded:
+Process: Mouse, Burst Duration: 3, Arrival Time: 1
+Process: Paint, Burst Duration: 2, Arrival Time: 2
+Process: NN, Burst Duration: 15, Arrival Time: 0
+Process: Word, Burst Duration: 8, Arrival Time: 4
+FIFO Scheduler
+Gantt Chart
+_###
+##
+###############
+########
+
+Average Waiting Time: 6.25
+Average Response Time: 13.25
+Throughput: 0.2
+
+SJF Scheduler
+Gantt Chart
+###
+##
+###############
+########
+
+Average Waiting Time: 11.25
+Average Response Time: 11.25
+Throughput: 0
+
+Round Robin Scheduler
+Gantt Chart
+_###
+_##
+###############
+_########
+
+Average Waiting Time: 8
+Average Response Time: 0
+Throughput: 0.2
+
+root@ubuntu:/home/osc/JurassicScheduler# exit
+exit
+
+Script done on Mon 11 Nov 2024 08:46:46 PM MST
