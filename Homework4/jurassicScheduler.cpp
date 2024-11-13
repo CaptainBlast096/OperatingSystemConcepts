@@ -1,73 +1,79 @@
+/*
+ Author: Jaleel Rogers
+ Date: 11/17/24
+ Description: Different schedulers to simulate scheduling multiple procceses
+ */
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <vector>
 
-using namespace std;
+using namespace std; // Helps me be lazy
 
 struct Process {
-    string name;
-    int burstDuration, arrivalTime;
-    int startTime = -1;
-    int endTime = 0;  // Track when process finishes
+    string name; // Name of process
+    int burstDuration; // Total CPU burst time required
+    int arrivalTime; // Time at which the process arrives in the system
+    int startTime = -1; // Time at which the proccess starts execution, set to -1 to indicate proccess hasn't started
+    int endTime = 0;  // Time at which the process finishes execution
 };
 
 vector<Process> readProcesses(const string& fileName) {
-    vector<Process> processes;
-    ifstream file(fileName);
+    vector<Process> processes; // Stores processes
+    ifstream file(fileName); // Opens the file
 
-    if (!file.is_open()) {
+    if (!file.is_open()) { // Check if the file was opened sucesfully
         cerr << "Error opening file" << endl;
         return processes;
     }
 
     string line;
-    while (getline(file, line)) {
+    while (getline(file, line)) { // Read each line of the file
         istringstream iss(line);
         Process process;
 
-        if (!(iss >> process.name >> process.burstDuration >> process.arrivalTime)) {
+        if (!(iss >> process.name >> process.burstDuration >> process.arrivalTime)) { // Extracts information from line
             cerr << "Error reading line: " << line << endl;
             continue;
         }
-        processes.push_back(process);
+        processes.push_back(process); // Adds process to the vector
     }
-    file.close();
+    file.close(); // Close the file
     return processes;
 }
 
-// Base Scheduler class
-class Scheduler {
+class Scheduler { // Base class for different scheduling algorithms
+
 protected:
     vector<Process> processes;
-    int currentTime = 0;
-    int totalWaitingTime = 0;
-    int totalResponseTime = 0;
-    int completedProcesses = 0;
+    int currentTime = 0; // Tracks the current simulated time
+    int totalWaitingTime = 0; // Total waiting time of all processes
+    int totalResponseTime = 0; // Total response time of all procceses
+    int completedProcesses = 0; // Keeps track of completed procceses
 
 public:
-    Scheduler(const vector<Process>& procs) : processes(procs) {}
-    virtual void schedule() = 0;
+    Scheduler(const vector<Process>& procs) : processes(procs) {} // Initializes the processes
+    virtual void schedule() = 0; // Helps child classes to provide their own implementation
 
-    void calculateMetrics(int cycleLimit) {
-    int completedInLimit = 0;
-    for (const auto& process : processes) {
-        if (process.endTime > 0 && process.endTime <= cycleLimit) {
-            completedInLimit++;
+    void calculateMetrics(int cycleLimit) { // Calculates and displays performance metrics
+        int completedInLimit = 0;
+        for (const auto& process : processes) {
+            if (process.endTime > 0 && process.endTime <= cycleLimit) {
+                completedInLimit++;
+            }
         }
+
+        double avgWaitingTime = static_cast<double>(totalWaitingTime) / processes.size(); // Avg time in queue waiting
+        double avgResponseTime = static_cast<double>(totalResponseTime) / processes.size(); // Avg time taken to start
+        double throughput = static_cast<double>(completedInLimit) / cycleLimit; // Number of processes completed
+
+        cout << "Average Waiting Time: " << avgWaitingTime << endl;
+        cout << "Average Response Time: " << avgResponseTime << endl;
+        cout << "Throughput: " << throughput <<"\n" << endl;
     }
 
-    double avgWaitingTime = processes.empty() ? 0 : static_cast<double>(totalWaitingTime) / processes.size();
-    double avgResponseTime = processes.empty() ? 0 : static_cast<double>(totalResponseTime) / processes.size();
-    double throughput = cycleLimit > 0 ? static_cast<double>(completedInLimit) / cycleLimit : 0;
-
-    cout << "Average Waiting Time: " << avgWaitingTime << endl;
-    cout << "Average Response Time: " << avgResponseTime << endl;
-    cout << "Throughput: " << throughput <<"\n" << endl;
-}
-
-
-    void displayGanttChart(const vector<string>& chartLines) const {
+    void displayGanttChart(const vector<string>& chartLines) const { // Displays the Gantt Chart's visual representation
         cout << "Gantt Chart" << endl;
         for (const auto& line : chartLines) {
             cout << line << endl;
@@ -76,40 +82,41 @@ public:
     }
 };
 
-// FIFO Scheduler
-class FifoScheduler : public Scheduler {
+class FifoScheduler : public Scheduler { // Implements the First-In-First-Out algorithm
 public:
     using Scheduler::Scheduler;
 
     void schedule() override {
-        cout << "FIFO Scheduler" << endl;
-        vector<string> chartLines(processes.size());
-        
-        int idx = 0;
-        for (auto& process : processes) {
-            // Advance to the process arrival time, filling with waiting cycles
+        cout << "\n" <<"FIFO Scheduler" << endl;
+
+        vector<string> chartLines(processes.size()); // Initialize a vector to store the Gantt chart
+
+        int index = 0; // Used to access elements within chartLines vector
+
+        for (auto& process : processes) { // Fills timeline with "_"
             while (currentTime < process.arrivalTime) {
-                chartLines[idx] += "_";
+                chartLines[index] += "_";
                 currentTime++;
             }
 
-            // Running process cycles
-            for (int i = 0; i < process.burstDuration; i++) {
-                chartLines[idx] += "#";
+            for (int i = 0; i < process.burstDuration; i++) { // Simulates execution of the current process
+                chartLines[index] += "#";
                 currentTime++;
             }
+
+            process.endTime = currentTime; // Set the process' end time to the current time
 
             // Calculate wait and response times
-            process.endTime = currentTime;
             int waitTime = process.endTime - process.arrivalTime - process.burstDuration;
             int responseTime = (process.startTime == -1) ? currentTime - process.arrivalTime : process.startTime;
 
+            // Accumulate the total waiting and response times for calculating averages later
             totalWaitingTime += waitTime;
             totalResponseTime += responseTime;
-            idx++;
+
+            index++; // Moves to the next process in the Gantt chart
         }
-        
-        displayGanttChart(chartLines);
+        displayGanttChart(chartLines); // Display the Gantt chart
         calculateMetrics(10);  // Calculate metrics within the 10 cycles as specified
     }
 };
@@ -177,52 +184,38 @@ public:
         cout << "Round Robin Scheduler" << endl;
         vector<string> chartLines(processes.size());
         vector<int> remainingBurst(processes.size());
-        vector<bool> hasStarted(processes.size(), false);
 
         for (int i = 0; i < processes.size(); i++) {
             remainingBurst[i] = processes[i].burstDuration;
         }
 
-        currentTime = 0;  // Reset time for Round Robin Scheduler
-        bool processActive = true;
-
-        while (processActive) {
-            processActive = false;  // Assume no progress unless a process is ready
-
+        while (completedProcesses < processes.size()) {
+            bool progressMade = false;
             for (int i = 0; i < processes.size(); i++) {
                 if (processes[i].arrivalTime <= currentTime && remainingBurst[i] > 0) {
-                    processActive = true;
-
-                    if (!hasStarted[i]) {  // Track first access as response time
-                        processes[i].startTime = currentTime;
-                        totalResponseTime += processes[i].startTime - processes[i].arrivalTime;
-                        hasStarted[i] = true;
-                    }
-
                     int timeSlice = min(quantum, remainingBurst[i]);
                     remainingBurst[i] -= timeSlice;
+                    progressMade = true;
 
-                    // Run process cycles
+                    // Running cycles
                     for (int j = 0; j < timeSlice; j++) {
                         chartLines[i] += "#";
                         currentTime++;
                     }
 
-                    if (remainingBurst[i] == 0) {  // Process is completed
+                    if (remainingBurst[i] == 0) {
                         processes[i].endTime = currentTime;
                         completedProcesses++;
-                        totalWaitingTime += processes[i].endTime - processes[i].arrivalTime - processes[i].burstDuration;
                     }
-                } else if (remainingBurst[i] > 0) {  // Process is waiting
+                } else if (remainingBurst[i] > 0) {
                     chartLines[i] += "_";
                 }
             }
-
-            if (!processActive) currentTime++;  // Advance time if no process can execute
+            if (!progressMade) currentTime++;
         }
 
         displayGanttChart(chartLines);
-        calculateMetrics(10);  // Adjust cycle limit if needed
+        calculateMetrics(10);
     }
 };
 
