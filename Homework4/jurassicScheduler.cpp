@@ -121,8 +121,8 @@ public:
     }
 };
 
-// Shortest Job First (SJF) Scheduler
-class SjfScheduler : public Scheduler {
+
+class SjfScheduler : public Scheduler { // Shortest Job First (SJF) Scheduler
 public:
     using Scheduler::Scheduler;
 
@@ -144,7 +144,7 @@ public:
                 }
             }
 
-            if (shortestIndex == -1) {  // No process ready, fill with waiting cycle
+            if (shortestIndex == -1) {
                 for (auto& line : chartLines) line += "_";
                 currentTime++;
                 continue;
@@ -166,14 +166,13 @@ public:
             process.burstDuration = 0;  // Mark process as completed
             completedProcesses++;
         }
-
         displayGanttChart(chartLines);
         calculateMetrics(10);
     }
 };
 
-// Round Robin Scheduler
-class RoundRobinScheduler : public Scheduler {
+
+class RoundRobinScheduler : public Scheduler { // Round Robin Scheduler
 private:
     int quantum;
 
@@ -188,10 +187,11 @@ public:
         for (int i = 0; i < processes.size(); i++) {
             remainingBurst[i] = processes[i].burstDuration;
         }
-
-        while (completedProcesses < processes.size()) {
-            bool progressMade = false;
-            for (int i = 0; i < processes.size(); i++) {
+        while (completedProcesses < processes.size()) { // Continue scheduling unitl all processes are completed
+            bool progressMade = false; // Flag to indicate if any process made progress in this round
+            
+            for (int i = 0; i < processes.size(); i++) { // Check if the process has arrived and still has remaining BT
+                
                 if (processes[i].arrivalTime <= currentTime && remainingBurst[i] > 0) {
                     int timeSlice = min(quantum, remainingBurst[i]);
                     remainingBurst[i] -= timeSlice;
@@ -213,7 +213,6 @@ public:
             }
             if (!progressMade) currentTime++;
         }
-
         displayGanttChart(chartLines);
         calculateMetrics(10);
     }
