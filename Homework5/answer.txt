@@ -1,0 +1,21 @@
+In my program I have a function called random_sleep. In order to remove nano-sleep, I simple commented out nanosleep(&ts, NULL). The results of removing nanosleep increased the speed at which threads were being executed along with predictability of execution. For example, instead of executing multiple threads without nanosleep activated, the program was executing and finishing one thread at a time like:
+
+E>0
+E>1
+E>2
+E has 9 work left
+E<0
+E<1
+E<2
+E>0
+E>1
+E>2
+E has 8 work left
+...
+Thread E: Finished all work, exiting.
+D>0
+D>2
+D has 9 work left
+...
+
+Without nanosleep, there was less fighting for control of the semaphores.
